@@ -68,13 +68,13 @@ var svg = d3.select("#sketch").append("svg")
 svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    //downloaderモジュールのインスタンス生成
-    var downloader = createDownloader()
+//downloaderモジュールのインスタンス生成
+var downloader = createDownloader()
 
 
-    //セレクターにbarChartモジュールとdownloaderモジュールを適用
-    var selector = d3.selectAll("#sketch")
-        .call(downloader)
+//セレクターにbarChartモジュールとdownloaderモジュールを適用
+var selector = d3.selectAll("#sketch")
+    .call(downloader)
 
 svg
   .on("mousedown", listen)
@@ -83,6 +83,8 @@ svg
   .on("touchleave", ignore)
   .on("mouseup", ignore)
   .on("mouseleave", ignore);
+
+var isNew = false
 
 d3.select("#downloadSVG").on("click", selector.downloadSVG )
 
@@ -94,9 +96,43 @@ touchEvents.forEach(function (eventName) {
   });
 });
 
+document.onkeydown = keydown;
+
+function keydown() {
+  if(event.keyCode == 32 && isNew){ // space key
+    isNew = false
+    document.getElementById('downloadSVG').click();
+  }
+  console.log("キーが押されました KeyCode :" + event.keyCode);
+
+  target = document.getElementById("messageShift");
+  if (event.shiftKey == true) {
+    target.innerHTML = "Shiftキーが押されました";
+  }
+  else {
+    target.innerHTML = "";
+  }
+
+  target = document.getElementById("messageCtrl");
+  if (event.ctrlKey == true) {
+    target.innerHTML = "Ctrlキーが押されました";
+  }
+  else {
+    target.innerHTML = "";
+  }
+
+  target = document.getElementById("messageAlt");
+  if (event.altKey == true) {
+    target.innerHTML = "Altlキーが押されました";
+  }
+  else {
+    target.innerHTML = "";
+  }
+}
 
 function listen () {
   drawing = true;
+  isNew = true;
   output.text('event: ' + d3.event.type);
   ptdata = []; // reset point data
   path = svg.append("path") // start a new line
@@ -165,32 +201,6 @@ function tick() {
   path.attr("d", function(d) { return line(d); }) // Redraw the path:
 }
 
-function exportSvg() {
-    var filename = "chart.svg";
-
-    var blobObject = new Blob([(new XMLSerializer()).serializeToString(svg)], { "type" : "text\/xml" })
-
-    if (navigator.appVersion.toString().indexOf('.NET') > 0){ //IE hack
-        window.navigator.msSaveBlob(blobObject, filename)
-
-    }else {
-        var url = window.URL.createObjectURL(blobObject)
-        var a = d3.select("body").append("a")
-
-        a.attr("class", "downloadLink")
-            .attr("download", "chart.svg")
-            .attr("href", url)
-            .text("test")
-            .style("display", "none")
-
-            a.node().click()
-
-        setTimeout(function() {
-          window.URL.revokeObjectURL(url)
-          a.remove()
-        }, 10)
-    }
-}
 </script>
 </body>
 </html>
