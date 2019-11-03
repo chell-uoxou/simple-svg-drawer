@@ -34,7 +34,8 @@ svg {
 
 <div id="sketch"></div>
 <div id="output"></div>
-<button id="downloadSVG">export</button>
+<button id="downloadSVG">Download as SVG</button>
+<button id="clearAndDownload" onclick="clearAndDownload()">Clear And Download</button>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="downloader.js"></script>
 <script src="simplify.js"></script>
@@ -43,7 +44,7 @@ svg {
 // based on http://bl.ocks.org/cloudshapes/5661984 by cloudshapes
 
 var margin = {top: 0, right: 0, bottom: 0, left: 0},
-    width = 960 - margin.left - margin.right,
+    width = 500 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 
@@ -86,7 +87,7 @@ svg
 
 var isNew = false
 
-d3.select("#downloadSVG").on("click", selector.downloadSVG )
+d3.select("#downloadSVG").on("click", selector.downloadSVG)
 
 // ignore default touch behavior
 var touchEvents = ['touchstart', 'touchmove', 'touchend'];
@@ -98,36 +99,22 @@ touchEvents.forEach(function (eventName) {
 
 document.onkeydown = keydown;
 
+function clearAndDownload() {
+  document.getElementById('downloadSVG').click();
+  svg.selectAll('path').remove();
+}
+
 function keydown() {
   if(event.keyCode == 32 && isNew){ // space key
     isNew = false
-    document.getElementById('downloadSVG').click();
+    document.getElementById('clearAndDownload').click();
   }
+
+  if (event.ctrlKey && event.keyCode == 90) { // ctrl + z
+    svg.selectAll('path:last-of-type').remove();
+  }
+
   console.log("キーが押されました KeyCode :" + event.keyCode);
-
-  target = document.getElementById("messageShift");
-  if (event.shiftKey == true) {
-    target.innerHTML = "Shiftキーが押されました";
-  }
-  else {
-    target.innerHTML = "";
-  }
-
-  target = document.getElementById("messageCtrl");
-  if (event.ctrlKey == true) {
-    target.innerHTML = "Ctrlキーが押されました";
-  }
-  else {
-    target.innerHTML = "";
-  }
-
-  target = document.getElementById("messageAlt");
-  if (event.altKey == true) {
-    target.innerHTML = "Altlキーが押されました";
-  }
-  else {
-    target.innerHTML = "";
-  }
 }
 
 function listen () {
