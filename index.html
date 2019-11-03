@@ -31,12 +31,11 @@ svg {
 </head>
 
 <body>
-    
-<input type="button" value="export" onclick="exportSvg()">
-    
-<div id="sketch"></div>
+
 <div id="output"></div>
+<button id="downloadSVG">export</button>
 <script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="downloader.js"></script>
 <script src="simplify.js"></script>
 
 <script>
@@ -68,6 +67,14 @@ var svg = d3.select("#sketch").append("svg")
 svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    //downloaderモジュールのインスタンス生成
+    var downloader = createDownloader()
+
+
+    //セレクターにbarChartモジュールとdownloaderモジュールを適用
+    var selector = d3.selectAll("#sketch")
+        .call(downloader)
+
 svg
   .on("mousedown", listen)
   .on("touchstart", listen)
@@ -76,13 +83,14 @@ svg
   .on("mouseup", ignore)
   .on("mouseleave", ignore);
 
+d3.select("#downloadSVG").on("click", selector.downloadSVG )
 
 // ignore default touch behavior
 var touchEvents = ['touchstart', 'touchmove', 'touchend'];
 touchEvents.forEach(function (eventName) {
   document.body.addEventListener(eventName, function(e){
     e.preventDefault();
-  });  
+  });
 });
 
 
@@ -115,7 +123,7 @@ function ignore () {
   before = ptdata.length;
   console.group('Line Simplification');
   console.log("Before simplification:", before)
-  
+
   // simplify
   ptdata = simplify(ptdata);
   after = ptdata.length;
@@ -128,7 +136,7 @@ function ignore () {
 
   // add newly created line to the drawing session
   session.push(ptdata);
-  
+
   // redraw the line after simplification
   tick();
 }
@@ -158,31 +166,30 @@ function tick() {
 
 function exportSvg() {
     var filename = "chart.svg";
-    
-    var blobObject = new Blob([(new XMLSerializer()).serializeToString(svg)], { "type" : "text\/xml" })   
-    
+
+    var blobObject = new Blob([(new XMLSerializer()).serializeToString(svg)], { "type" : "text\/xml" })
+
     if (navigator.appVersion.toString().indexOf('.NET') > 0){ //IE hack
         window.navigator.msSaveBlob(blobObject, filename)
 
     }else {
-        var url = window.URL.createObjectURL(blobObject)                
+        var url = window.URL.createObjectURL(blobObject)
         var a = d3.select("body").append("a")
-        
+
         a.attr("class", "downloadLink")
             .attr("download", "chart.svg")
             .attr("href", url)
             .text("test")
             .style("display", "none")
-            
+
             a.node().click()
 
         setTimeout(function() {
           window.URL.revokeObjectURL(url)
           a.remove()
-        }, 10)            
+        }, 10)
     }
-}    
+}
 </script>
 </body>
 </html>
-
