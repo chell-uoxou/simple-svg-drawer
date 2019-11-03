@@ -5,10 +5,13 @@
 <title>Tracing a line with d3.js</title>
 <style>
 
+
 svg {
   background: #ddd;
   font: 10px sans-serif;
   cursor: crosshair;
+  border-radius: 5px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.2);
 }
 
 .line {
@@ -26,16 +29,28 @@ svg {
   font: 12px/1.4 monospace;
 }
 
-
 </style>
+
+<link rel="stylesheet" type="text/css" href="main.css">
+
 </head>
 
 <body>
 
+<label class="label">Sketch Here!</label>
 <div id="sketch"></div>
 <div id="output"></div>
-<button id="downloadSVG">Download as SVG</button>
-<button id="clearAndDownload" onclick="clearAndDownload()">Clear And Download</button>
+
+<div class="col-2">
+<div class="input-group">
+    <label class="label">File Name</label>
+    <input class="input--style-4" type="text" id="file_name">.svg
+</div>
+</div>
+
+<button class="btn btn--radius-2 btn--blue" id="downloadSVG">Download as SVG</button>
+　
+<button class="btn btn--radius-2 btn--blue" id="clearAndDownload" onclick="clearAndDownload()">Clear And Download</button>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="downloader.js"></script>
 <script src="simplify.js"></script>
@@ -52,6 +67,7 @@ var margin = {top: 0, right: 0, bottom: 0, left: 0},
 var ptdata = [];
 var session = [];
 var path;
+var filename;
 var drawing = false;
 
 var output = d3.select('#output');
@@ -98,6 +114,7 @@ touchEvents.forEach(function (eventName) {
 });
 
 document.onkeydown = keydown;
+output.html("write here")
 
 function clearAndDownload() {
   document.getElementById('downloadSVG').click();
@@ -113,8 +130,6 @@ function keydown() {
   if (event.ctrlKey && event.keyCode == 90) { // ctrl + z
     svg.selectAll('path:last-of-type').remove();
   }
-
-  console.log("キーが押されました KeyCode :" + event.keyCode);
 }
 
 function listen () {
