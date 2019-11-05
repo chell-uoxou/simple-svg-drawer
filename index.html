@@ -51,7 +51,7 @@ svg {
 <button class="btn btn--radius-2 btn--blue" id="downloadSVG">Download as SVG</button>
 　
 <button class="btn btn--radius-2 btn--blue" id="clearAndDownload" onclick="clearAndDownload()">Clear And Download</button>
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="d3.v3.min.js"></script>
 <script src="downloader.js"></script>
 <script src="simplify.js"></script>
 
@@ -59,8 +59,8 @@ svg {
 // based on http://bl.ocks.org/cloudshapes/5661984 by cloudshapes
 
 var margin = {top: 0, right: 0, bottom: 0, left: 0},
-    width = 500 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 200 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
 
 
 // var npoints = 100;
