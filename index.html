@@ -127,7 +127,7 @@ function keydown() {
     document.getElementById('clearAndDownload').click();
   }
 
-  if (event.ctrlKey && event.keyCode == 90) { // ctrl + z
+  if (event.keyCode == 90) { // z
     svg.selectAll('path:last-of-type').remove();
   }
 }
